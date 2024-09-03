@@ -7,13 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model account_managers {
-  id         Int     @id @default(autoincrement())
-  email      String? @db.VarChar
-  first_name String? @db.VarChar
-  last_name  String? @db.VarChar
-}
-
 model brokers {
   id           Int     @id @default(autoincrement())
   broker_name  String? @db.VarChar
@@ -108,21 +101,6 @@ model invoices_draft {
   client_id          Int?
 }
 
-model invoices_draft_july {
-  id                 Int       @id @default(autoincrement())
-  client_name        String?
-  invoice_date       DateTime? @db.Date
-  payment_terms_days Int?
-  payment_method     String?
-  invoice_num        String?
-  service_month      String?
-  first_name         String?
-  last_name          String?
-  employer_fee       Decimal?  @db.Decimal
-  employee_fee       Decimal?  @db.Decimal
-  total_fee          Decimal?  @db.Decimal
-}
-
 model invoices_final {
   client_name        String?   @db.VarChar
   invoice_date       DateTime? @db.Date
@@ -173,15 +151,6 @@ model members {
   client_id          Int?
   dependent_of       String?
 }
-
-model payroll_specialists {
-  id         Int     @id @default(autoincrement())
-  email      String? @db.VarChar
-  first_name String? @db.VarChar
-  last_name  String? @db.VarChar
-}
-
-
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model client_onboarding_workflow {
