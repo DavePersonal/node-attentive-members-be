@@ -8,8 +8,8 @@ import { ClientsToBrokersModule } from './clients_to_brokers/clients_to_brokers.
 import { ClientsToBrokersExternalModule } from './clients_to_brokers_external/clients_to_brokers_external.module';
 import { MembersModule } from './members/members.module';
 import { InvoicesModule } from './invoices/invoices.module';
-import { EmailService } from './common/email/email.service';
 import {ConfigModule} from '@nestjs/config';
+import {EmailModule} from './common/email/email.module';
 
 @Module({
   imports: [
@@ -20,11 +20,12 @@ import {ConfigModule} from '@nestjs/config';
     ClientsToBrokersExternalModule,
     MembersModule,
     InvoicesModule,
+    EmailModule,
     ConfigModule.forRoot({
       isGlobal: true
-    })
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, EmailService],
+  providers: [AppService],
 })
 export class AppModule {}

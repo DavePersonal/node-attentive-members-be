@@ -1,5 +1,3 @@
-// src/clients-to-brokers/clients-to-brokers.controller.ts
-
 import {
     Controller,
     Get,
@@ -7,15 +5,14 @@ import {
     Put,
     Delete,
     Req,
-    Res,
     Param,
     Body,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { BaseController } from '../common/base.controller';
 import { IController } from '../common/interfaces/controller.interface';
 import { clients_to_brokers } from '@prisma/client';
-import {ClientsToBrokersService} from './clients_to_brokers.service';
+import { ClientsToBrokersService } from './clients_to_brokers.service';
 
 @Controller('clients-to-brokers')
 export class ClientsToBrokersController
@@ -27,34 +24,30 @@ export class ClientsToBrokersController
     }
 
     @Get()
-    async findAll(@Req() req: Request, @Res() res: Response): Promise<void> {
-        return super.findAll(req, res);
+    async findAll(@Req() req: Request): Promise<clients_to_brokers[]> {
+        return super.findAll(req);
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: number, @Res() res: Response): Promise<void> {
-        return super.findOne(id, res);
+    async findOne(@Param('id') id: number): Promise<clients_to_brokers> {
+        return super.findOne(id);
     }
 
     @Post()
-    async create(
-        @Body() data: clients_to_brokers,
-        @Res() res: Response,
-    ): Promise<void> {
-        return super.create(data, res);
+    async create(@Body() data: clients_to_brokers): Promise<clients_to_brokers> {
+        return super.create(data);
     }
 
     @Put(':id')
     async update(
         @Param('id') id: number,
         @Body() data: clients_to_brokers,
-        @Res() res: Response,
-    ): Promise<void> {
-        return super.update(id, data, res);
+    ): Promise<clients_to_brokers> {
+        return super.update(id, data);
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: number, @Res() res: Response): Promise<void> {
-        return super.delete(id, res);
+    async delete(@Param('id') id: number): Promise<void> {
+        return super.delete(id);
     }
 }

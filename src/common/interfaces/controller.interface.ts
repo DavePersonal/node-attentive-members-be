@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 
 export interface IController<T> {
-    findAll(req: Request, res: Response): Promise<void>;
-    findOne(id: number, res: Response): Promise<void>;
-    create(data: T, res: Response): Promise<void>;
-    update(id: number, data: T, res: Response): Promise<void>;
-    delete(id: number, res: Response): Promise<void>;
+    findAll(req: Request): Promise<T[]>;
+    findOne(id: number): Promise<T>;
+    create(data: T): Promise<T>;
+    update(id: number, data: T): Promise<T>;
+    delete(id: number): Promise<void>;
 }
