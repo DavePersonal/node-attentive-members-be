@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {forwardRef, Inject, Injectable} from '@nestjs/common';
 import { EmailStrategy } from './email-strategy.interface';
 import { EmailService } from '../email.service';
 import { EmailActions } from '../email-actions.enum';
@@ -9,7 +9,10 @@ import {EmailSendgridTemplates} from '../email-sendgrid-templates.enum';
 export class EditCommissionEmailStrategy implements EmailStrategy {
     private readonly templateId = EmailSendgridTemplates.EditCommission;
 
-    constructor(private readonly emailService: EmailService) {}
+    constructor(
+        @Inject(forwardRef(() => EmailService))
+        private readonly emailService: EmailService
+    ) {}
 
     async sendEmail(data: EmailData[EmailActions.EditCommission]): Promise<void> {
         await this.emailService.send({

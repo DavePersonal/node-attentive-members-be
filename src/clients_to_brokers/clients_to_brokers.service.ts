@@ -3,13 +3,15 @@ import { PrismaService } from '../prisma/prisma.service';
 import { BaseService } from '../common/base.service';
 import { IService } from '../common/interfaces/service.interface';
 import { clients_to_brokers } from '@prisma/client'; // Import the Prisma model type
+import * as jwt from 'jsonwebtoken';
+import {ConfigService} from '@nestjs/config';
 
 @Injectable()
 export class ClientsToBrokersService
     extends BaseService<clients_to_brokers>
     implements IService<clients_to_brokers>
 {
-    constructor(prismaService: PrismaService) {
+    constructor(prismaService: PrismaService, private configService: ConfigService) {
         super(prismaService, prismaService.clients_to_brokers);
     }
 
@@ -34,5 +36,14 @@ export class ClientsToBrokersService
 
     async delete(id: number): Promise<clients_to_brokers> {
         return super.delete(id);
+    }
+
+    validateToken(token: string): any {
+        try {
+            const secret = this.configService.get<string>('JWT_SECRET');
+            return jwt.verify(token, secret);
+        } catch (error) {
+            throw new Error('Invalid or expired token');
+        }
     }
 }

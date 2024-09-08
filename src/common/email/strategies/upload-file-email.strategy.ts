@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {forwardRef, Inject, Injectable} from '@nestjs/common';
 import { EmailStrategy } from './email-strategy.interface';
 import { EmailService } from '../email.service';
 import { EmailActions } from '../email-actions.enum';
@@ -10,7 +10,10 @@ export class UploadFileEmailStrategy implements EmailStrategy {
     private readonly fixedRecipient = 'david@oakmorelabs.com'; // Fixed email address
     private readonly templateId = EmailSendgridTemplates.UploadFile;
 
-    constructor(private readonly emailService: EmailService) {}
+    constructor(
+        @Inject(forwardRef(() => EmailService))
+        private readonly emailService: EmailService
+    ) {}
 
     async sendEmail(data: EmailData[EmailActions.UploadFile]): Promise<void> {
         await this.emailService.send({

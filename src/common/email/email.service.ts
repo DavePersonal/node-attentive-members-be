@@ -1,14 +1,15 @@
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { EmailStrategyFactory } from './email-strategy-factory';
-import sgMail from '@sendgrid/mail';
+import * as sgMail from '@sendgrid/mail';
 import { EmailActions } from './email-actions.enum';
 import { EmailData } from './email-data.types';
 import * as jwt from 'jsonwebtoken';
+import {ConfigService} from '@nestjs/config';
 
 @Injectable()
 export class EmailService {
-    constructor(private readonly strategyFactory: EmailStrategyFactory) {
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY); // Set SendGrid API key
+    constructor(private readonly strategyFactory: EmailStrategyFactory, private configService: ConfigService) {
+        sgMail.setApiKey(this.configService.get<string>('SENDGRID_API_KEY'));
     }
 
     async sendEmail<T extends EmailActions>(
@@ -23,7 +24,7 @@ export class EmailService {
         try {
             const msg = {
                 to: options.to,
-                from: 'noreply@yourdomain.com',
+                from: options.from,
                 templateId: options.templateId,
                 dynamicTemplateData: options.dynamicTemplateData,
             };
@@ -38,7 +39,7 @@ export class EmailService {
     }
 
     createJwtToken(data: any): string {
-        const secret = process.env.JWT_SECRET || 'default-secret';
+        const secret = this.configService.get<string>('JWT_SECRET');
         return jwt.sign(data, secret, { expiresIn: '24h' });
     }
 }

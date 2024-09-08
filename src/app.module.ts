@@ -10,6 +10,8 @@ import { MembersModule } from './members/members.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import {ConfigModule} from '@nestjs/config';
 import {EmailModule} from './common/email/email.module';
+import { GoogleModule } from './common/google/google.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import {EmailModule} from './common/email/email.module';
     ConfigModule.forRoot({
       isGlobal: true
     }),
+    GoogleModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

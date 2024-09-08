@@ -6,7 +6,7 @@ import {
     Delete,
     Req,
     Param,
-    Body,
+    Body, Query
 } from '@nestjs/common';
 import { Request } from 'express';
 import { BaseController } from '../common/base.controller';
@@ -14,7 +14,7 @@ import { IController } from '../common/interfaces/controller.interface';
 import { clients_to_brokers } from '@prisma/client';
 import { ClientsToBrokersService } from './clients_to_brokers.service';
 
-@Controller('clients-to-brokers')
+@Controller('commission-rates')
 export class ClientsToBrokersController
     extends BaseController<clients_to_brokers>
     implements IController<clients_to_brokers>
@@ -26,6 +26,11 @@ export class ClientsToBrokersController
     @Get()
     async findAll(@Req() req: Request): Promise<clients_to_brokers[]> {
         return super.findAll(req);
+    }
+
+    @Get('validate-token')
+    async validateToken(@Req() req: Request, @Query() token: { token: string }): Promise<any> {
+        return this.clientsToBrokersService.validateToken(token.token);
     }
 
     @Get(':id')
@@ -50,4 +55,6 @@ export class ClientsToBrokersController
     async delete(@Param('id') id: number): Promise<void> {
         return super.delete(id);
     }
+
+
 }
