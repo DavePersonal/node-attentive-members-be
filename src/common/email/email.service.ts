@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { EmailStrategyFactory } from './email-strategy-factory';
 import sgMail from '@sendgrid/mail';
 import { EmailActions } from './email-actions.enum';
 import { EmailData } from './email-data.types';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class EmailService {
@@ -12,25 +13,32 @@ export class EmailService {
 
     async sendEmail<T extends EmailActions>(
         action: T,
-        data: EmailData[T], // Enforce that the data matches the required type for the given action
+        data: EmailData[T],
     ): Promise<void> {
         const strategy = this.strategyFactory.getStrategy(action);
         await strategy.sendEmail(data);
     }
 
-    async send(options: { to: string; templateId: string; dynamicTemplateData: any }): Promise<void> {
+    async send(options: { to: string; from: {email: string, name: string}, templateId: string; dynamicTemplateData: any }): Promise<void> {
         try {
             const msg = {
                 to: options.to,
-                from: 'noreply@yourdomain.com', // Your verified sender
+                from: 'noreply@yourdomain.com',
                 templateId: options.templateId,
                 dynamicTemplateData: options.dynamicTemplateData,
             };
 
             await sgMail.send(msg);
-            console.log(`Email sent to ${options.to}`);
         } catch (error) {
-            console.error(`Failed to send email: ${error.message}`);
+            throw new HttpException(
+                'Could not send email.',
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
         }
+    }
+
+    createJwtToken(data: any): string {
+        const secret = process.env.JWT_SECRET || 'default-secret';
+        return jwt.sign(data, secret, { expiresIn: '24h' });
     }
 }

@@ -12,4 +12,10 @@ export type EmailData = {
         updatedBy: string;
         updateDate: string;
     };
+    [EmailActions.UploadFile]: {
+        firstName: string;
+        clientName: string;
+        clientID: number;
+        newFileName: string;
+    }
 };
