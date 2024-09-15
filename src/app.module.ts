@@ -16,6 +16,8 @@ import { AgenciesController } from './agencies/agencies.controller';
 import { AgenciesService } from './agencies/agencies.service';
 import { BrokersToAgenciesService } from './brokers_to_agencies/brokers_to_agencies.service';
 import { BrokersToAgenciesController } from './brokers_to_agencies/brokers_to_agencies.controller';
+import { AgenciesModule } from './agencies/agencies.module';
+import { BrokersToAgenciesModule } from './brokers_to_agencies/brokers_to_agencies.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { BrokersToAgenciesController } from './brokers_to_agencies/brokers_to_ag
     }),
     GoogleModule,
     AuthModule,
+    AgenciesModule,
+    BrokersToAgenciesModule,
   ],
   controllers: [AppController, AgenciesController, BrokersToAgenciesController],
   providers: [AppService, AgenciesService, BrokersToAgenciesService],

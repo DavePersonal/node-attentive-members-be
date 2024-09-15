@@ -11,8 +11,8 @@ import {
 import { Request } from 'express';
 import { BaseController } from '../common/base.controller';
 import { IController } from '../common/interfaces/controller.interface';
-import { clients_to_brokers } from '@prisma/client';
 import { ClientsToBrokersService } from './clients_to_brokers.service';
+import { clients_to_brokers } from '@prisma/client';
 
 @Controller('commission-rates')
 export class ClientsToBrokersController

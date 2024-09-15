@@ -1,15 +1,18 @@
-model agency {
-  id                 Int     @id @default(autoincrement())
-  agency_name        String? @db.VarChar
-  agencies           String? @db.VarChar
-  head_broker_id     String? @db.VarChar
+model agencies {
+  id                  Int                   @id @default(autoincrement())
+  agency_name         String?               @db.VarChar
+  agencies            String?               @db.VarChar
+  head_broker_id      String?               @db.VarChar
+  brokers_to_agencies brokers_to_agencies[]
 }
 
 model brokers_to_agencies {
-  id              Int       @id @default(autoincrement())
-  broker_id       Int?      @db.Integer
-  agency_id       Int?      @db.Integer
-  is_head_broker  Boolean?  @db.Boolean
+  id             Int      @id @default(autoincrement())
+  broker_id      Int?     @db.Integer
+  agency_id      Int?     @db.Integer
+  is_head_broker Boolean? @db.Boolean
+  brokers brokers? @relation(fields: [broker_id], references: [id])
+  agencies agencies?  @relation(fields: [agency_id], references: [id])
 }
 
 model brokers {
@@ -19,8 +22,8 @@ model brokers {
   last_name    String? @db.VarChar
   phone_mobile String? @db.VarChar
   email        String? @db.VarChar
-
-  clients_to_brokers clients_to_brokers[]
+  clients_to_brokers  clients_to_brokers[]
+  brokers_to_agencies brokers_to_agencies[]
 }
 
 model clients {
@@ -52,7 +55,7 @@ model clients {
   account_manager_id         Int?
   payroll_specialist_id      Int?
 
-  clients_to_brokers clients_to_brokers[]  // Establish relationship with join table
+  clients_to_brokers clients_to_brokers[] // Establish relationship with join table
 }
 
 model clients_to_brokers {
@@ -68,8 +71,8 @@ model clients_to_brokers {
   modified_by          String?
   comment              String?
 
-  client  clients @relation(fields: [client_id], references: [id])
-  broker  brokers @relation(fields: [broker_id], references: [id])
+  client clients @relation(fields: [client_id], references: [id])
+  broker brokers @relation(fields: [broker_id], references: [id])
 
   @@index([client_id])
   @@index([broker_id])
@@ -185,7 +188,6 @@ model client_onboarding_workflow {
 
   @@ignore
 }
-
 
 generator client {
   provider = "prisma-client-js"
