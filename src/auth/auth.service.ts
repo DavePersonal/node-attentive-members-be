@@ -1,4 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import {LoginDto} from './dto/login.dto';
+import {DatabaseDataAccess} from './database/database.dataAccess';
+import {DatabaseCollection} from './database/database.collection';
+import {HttpException} from '../common/exceptions/HttpException';
+import {compare} from 'bcrypt'
+import {MembersRolePermissionsDefault} from './database/members-roles.types';
+import {AUTH_CONSTS} from './auth.consts';
+import jwt from 'jsonwebtoken'
 
 @Injectable()
 export class AuthService {

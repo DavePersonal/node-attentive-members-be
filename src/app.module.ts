@@ -12,6 +12,10 @@ import {ConfigModule} from '@nestjs/config';
 import {EmailModule} from './common/email/email.module';
 import { GoogleModule } from './common/google/google.module';
 import { AuthModule } from './auth/auth.module';
+import { AgenciesController } from './agencies/agencies.controller';
+import { AgenciesService } from './agencies/agencies.service';
+import { BrokersToAgenciesService } from './brokers_to_agencies/brokers_to_agencies.service';
+import { BrokersToAgenciesController } from './brokers_to_agencies/brokers_to_agencies.controller';
 
 @Module({
   imports: [
@@ -29,7 +33,7 @@ import { AuthModule } from './auth/auth.module';
     GoogleModule,
     AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, AgenciesController, BrokersToAgenciesController],
+  providers: [AppService, AgenciesService, BrokersToAgenciesService],
 })
 export class AppModule {}

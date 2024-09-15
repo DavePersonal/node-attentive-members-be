@@ -1,10 +1,15 @@
-generator client {
-  provider = "prisma-client-js"
+model agency {
+  id                 Int     @id @default(autoincrement())
+  agency_name        String? @db.VarChar
+  agencies           String? @db.VarChar
+  head_broker_id     String? @db.VarChar
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+model brokers_to_agencies {
+  id              Int       @id @default(autoincrement())
+  broker_id       Int?      @db.Integer
+  agency_id       Int?      @db.Integer
+  is_head_broker  Boolean?  @db.Boolean
 }
 
 model brokers {
@@ -179,4 +184,14 @@ model client_onboarding_workflow {
   modified_date              DateTime? @db.Timestamp(6)
 
   @@ignore
+}
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
