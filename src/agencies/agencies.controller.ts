@@ -9,7 +9,7 @@ import {HttpException} from '../common/exceptions/HttpException';
 
 @Controller('agencies')
 export class AgenciesController extends BaseController<agencies> implements IController<agencies> {
-    constructor(private readonly agenciesService: AgenciesService, private readonly brokersToAgeniesService: BrokersToAgenciesService) {
+    constructor(private readonly agenciesService: AgenciesService, private readonly brokersToAgenciesService: BrokersToAgenciesService) {
         super(agenciesService);
     }
 
@@ -27,7 +27,7 @@ export class AgenciesController extends BaseController<agencies> implements ICon
         if (!brokerId) {
             throw new HttpException(400, 'Broker ID is required');
         }
-        const brokerToAgencies = await this.brokersToAgeniesService.findHeadBrokerByBrokerId(brokerId);
+        const brokerToAgencies = await this.brokersToAgenciesService.findHeadBrokerByBrokerId(brokerId);
         return brokerToAgencies[0].brokers
     }
 
