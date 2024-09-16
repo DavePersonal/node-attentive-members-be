@@ -1,19 +1,10 @@
-import {
-    Request,
-} from 'express';
-import {
-    IController
-} from './interfaces/controller.interface';
-import {
-    BaseService
-} from './base.service';
-import {
-    HttpException,
-    Param,
-    Body,
-    Req,
-    HttpStatus,
-} from '@nestjs/common';
+import {Request} from 'express'
+import {IController} from './interfaces/controller.interface'
+import {BaseService} from './base.service'
+import {Body, HttpException, HttpStatus, Param, Req} from '@nestjs/common'
+import {IQueryFilter, QueryFilter} from '../shared/decorators/query-filter.decorator'
+import {QueryPage} from '../shared/decorators/query-page.decorator'
+import {QuerySize} from '../shared/decorators/query-limit.decorator'
 
 export class BaseController < T > implements IController < T > {
     constructor(private readonly baseService: BaseService < T > ) {}
@@ -29,6 +20,10 @@ export class BaseController < T > implements IController < T > {
             this.handleException(error);
         }
     }
+
+    // async findAll(@QueryFilter() filter: IQueryFilter, @QueryPage() page: number, @QuerySize() size: number): Promise < T[] > {
+    //     return await this.baseService.findAll(page, size)
+    // }
 
     async findOne(@Param('id') id: number): Promise < T > {
         try {

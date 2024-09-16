@@ -18,6 +18,8 @@ import { BrokersToAgenciesService } from './brokers_to_agencies/brokers_to_agenc
 import { BrokersToAgenciesController } from './brokers_to_agencies/brokers_to_agencies.controller';
 import { AgenciesModule } from './agencies/agencies.module';
 import { BrokersToAgenciesModule } from './brokers_to_agencies/brokers_to_agencies.module';
+import {APP_FILTER} from '@nestjs/core'
+import {HttpExceptionFilter} from './shared/filters/http-exception.filter'
 
 @Module({
   imports: [
@@ -39,6 +41,9 @@ import { BrokersToAgenciesModule } from './brokers_to_agencies/brokers_to_agenci
     BrokersToAgenciesModule,
   ],
   controllers: [AppController, AgenciesController, BrokersToAgenciesController],
-  providers: [AppService, AgenciesService, BrokersToAgenciesService],
+  providers: [ {
+    provide: APP_FILTER,
+    useClass: HttpExceptionFilter,
+  },AppService, AgenciesService, BrokersToAgenciesService],
 })
 export class AppModule {}
