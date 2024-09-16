@@ -1,8 +1,6 @@
 import {Db, MongoClient} from 'mongodb'
-import dotenv from 'dotenv'
 import {DatabaseCollection} from './database.collection'
 import {HttpException} from '../../common/exceptions/HttpException';
-dotenv.config()
 
 export class DatabaseDataAccess {
     private static instance: DatabaseDataAccess;

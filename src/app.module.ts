@@ -30,6 +30,7 @@ import { BrokersToAgenciesModule } from './brokers_to_agencies/brokers_to_agenci
     InvoicesModule,
     EmailModule,
     ConfigModule.forRoot({
+      envFilePath: '.env',
       isGlobal: true
     }),
     GoogleModule,
