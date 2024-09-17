@@ -1,8 +1,9 @@
 import {Injectable} from '@nestjs/common'
+import {IAccount, IUser} from '../auth.types'
 
 @Injectable()
 export class JwtDto {
-  user: any
-  account: any
+  user: IUser
+  account: IAccount
   permissions: string[]
 }

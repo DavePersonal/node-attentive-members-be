@@ -14,6 +14,6 @@ import {UploadFileEmailStrategy} from './strategies/upload-file-email.strategy';
         NewClientEmailStrategy,
         EditCommissionEmailStrategy,
     ],
-    exports: [EmailService],
+    exports: [EmailService, EmailStrategyFactory],
 })
 export class EmailModule {}
