@@ -2,9 +2,10 @@
 
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { BaseService } from '../../common/base.service';
+import {BaseService, PaginatedResult} from '../../common/base.service'
 import { IService } from '../../common/interfaces/service.interface';
-import { invoices_draft } from '@prisma/client'; // Import the Prisma model type
+import { invoices_draft } from '@prisma/client';
+import {IQueryFilter} from '../../shared/decorators/query-filter.decorator' // Import the Prisma model type
 
 @Injectable()
 export class InvoicesDraftService
@@ -16,36 +17,27 @@ export class InvoicesDraftService
     }
 
     // Retrieve all draft invoices
-    async findAll(): Promise<invoices_draft[]> {
-        return this.prismaService.invoices_draft.findMany();
+    async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<invoices_draft>> {
+        return super.findAll(filter, page, size)
     }
 
     // Retrieve a single draft invoice by ID
     async findOne(id: number): Promise<invoices_draft | null> {
-        return this.prismaService.invoices_draft.findUnique({
-            where: { id },
-        });
+        return super.findOne(id);
     }
 
     // Create a new draft invoice
     async create(data: invoices_draft): Promise<invoices_draft> {
-        return this.prismaService.invoices_draft.create({
-            data,
-        });
+        return super.create(data);
     }
 
     // Update an existing draft invoice by ID
     async update(id: number, data: invoices_draft): Promise<invoices_draft> {
-        return this.prismaService.invoices_draft.update({
-            where: { id },
-            data,
-        });
+        return super.update(id, data);
     }
 
     // Delete a draft invoice by ID
     async delete(id: number): Promise<invoices_draft> {
-        return this.prismaService.invoices_draft.delete({
-            where: { id },
-        });
+        return super.delete(id);
     }
 }

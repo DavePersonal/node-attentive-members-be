@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service'; // Correct import path for PrismaService
-import { BaseService } from '../../common/base.service';
+import {BaseService, PaginatedResult} from '../../common/base.service'
 import { IService } from '../../common/interfaces/service.interface';
-import { invoices_final } from '@prisma/client'; // Import the Prisma model type
+import { invoices_final } from '@prisma/client';
+import {IQueryFilter} from '../../shared/decorators/query-filter.decorator' // Import the Prisma model type
 
 @Injectable()
 export class InvoicesFinalService
@@ -13,32 +14,23 @@ export class InvoicesFinalService
         super(prismaService, prismaService.invoices_final);
     }
 
-    async findAll(): Promise<invoices_final[]> {
-        return this.prismaService.invoices_final.findMany();
+    async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<invoices_final>> {
+        return super.findAll(filter, page, size)
     }
 
     async findOne(id: number): Promise<invoices_final | null> {
-        return this.prismaService.invoices_final.findUnique({
-            where: { id },
-        });
+        return super.findOne(id);
     }
 
     async create(data: invoices_final): Promise<invoices_final> {
-        return this.prismaService.invoices_final.create({
-            data,
-        });
+        return super.create(data);
     }
 
     async update(id: number, data: invoices_final): Promise<invoices_final> {
-        return this.prismaService.invoices_final.update({
-            where: { id },
-            data,
-        });
+        return super.update(id, data);
     }
 
     async delete(id: number): Promise<invoices_final> {
-        return this.prismaService.invoices_final.delete({
-            where: { id },
-        });
+        return super.delete(id);
     }
 }

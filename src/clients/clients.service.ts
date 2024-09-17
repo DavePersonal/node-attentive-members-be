@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { BaseService } from '../common/base.service';
+import {BaseService, PaginatedResult} from '../common/base.service'
 import { IService } from '../common/interfaces/service.interface';
-import { clients } from '@prisma/client'; // Import the Prisma model type
+import { clients } from '@prisma/client';
+import {IQueryFilter} from '../shared/decorators/query-filter.decorator' // Import the Prisma model type
 
 @Injectable()
 export class ClientsService extends BaseService<clients> implements IService<clients> {
@@ -10,8 +11,8 @@ export class ClientsService extends BaseService<clients> implements IService<cli
         super(prismaService, prismaService.clients);
     }
 
-    async findAll(): Promise<clients[]> {
-        return super.findAll();
+    async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<clients>> {
+        return super.findAll(filter, page, size);
     }
 
     async findOne(id: number): Promise<clients | null> {

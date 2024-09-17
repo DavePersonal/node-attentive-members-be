@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service'; // Correct import path for PrismaService
-import { BaseService } from '../common/base.service';
+import {BaseService, PaginatedResult} from '../common/base.service'
 import { IService } from '../common/interfaces/service.interface';
-import { members } from '@prisma/client'; // Import the Prisma model type
+import { members } from '@prisma/client';
+import {IQueryFilter} from '../shared/decorators/query-filter.decorator' // Import the Prisma model type
 
 @Injectable()
 export class MembersService
@@ -13,32 +14,23 @@ export class MembersService
         super(prismaService, prismaService.members);
     }
 
-    async findAll(): Promise<members[]> {
-        return this.prismaService.members.findMany();
+    async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<members>> {
+        return super.findAll(filter, page, size);
     }
 
     async findOne(id: number): Promise<members | null> {
-        return this.prismaService.members.findUnique({
-            where: { id },
-        });
+        return super.findOne(id);
     }
 
     async create(data: members): Promise<members> {
-        return this.prismaService.members.create({
-            data,
-        });
+        return super.create(data);
     }
 
     async update(id: number, data: members): Promise<members> {
-        return this.prismaService.members.update({
-            where: { id },
-            data,
-        });
+        return super.update(id, data);
     }
 
     async delete(id: number): Promise<members> {
-        return this.prismaService.members.delete({
-            where: { id },
-        });
+        return super.delete(id);
     }
 }

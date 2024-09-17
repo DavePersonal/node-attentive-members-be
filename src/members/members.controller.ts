@@ -4,15 +4,17 @@ import {
     Post,
     Put,
     Delete,
-    Req,
     Param,
-    Body,
-} from '@nestjs/common';
-import { Request } from 'express';
+    Body, ParseIntPipe,
+} from '@nestjs/common'
 import { MembersService } from './members.service';
 import { BaseController } from '../common/base.controller';
 import { IController } from '../common/interfaces/controller.interface';
-import { members } from '@prisma/client';
+import {members} from '@prisma/client'
+import {IQueryFilter, QueryFilter} from '../shared/decorators/query-filter.decorator'
+import {QueryPage} from '../shared/decorators/query-page.decorator'
+import {QuerySize} from '../shared/decorators/query-limit.decorator'
+import {PaginatedResult} from '../common/base.service'
 
 @Controller('members')
 export class MembersController
@@ -24,12 +26,12 @@ export class MembersController
     }
 
     @Get()
-    async findAll(@Req() req: Request): Promise<members[]> {
-        return super.findAll(req);
+    async findAll(@QueryFilter() filter: IQueryFilter, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<members>> {
+        return super.findAll(filter, page, size);
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: number): Promise<members> {
+    async findOne(@Param('id', ParseIntPipe) id: number): Promise<members> {
         return super.findOne(id);
     }
 
@@ -47,7 +49,7 @@ export class MembersController
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: number): Promise<void> {
+    async delete(@Param('id') id: number): Promise<{success:boolean}> {
         return super.delete(id);
     }
 }

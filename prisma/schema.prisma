@@ -156,7 +156,7 @@ model members {
   meta_created_date  DateTime? @db.Timestamptz(6)
   meta_modified_date DateTime? @db.Timestamptz(6)
   id                 Int       @id(map: "members_august2_pkey") @default(autoincrement())
-  client_id          Int?
+  client_id           clients @relation(fields: [client_id], references: [id])
   dependent_of       String?
 }
 

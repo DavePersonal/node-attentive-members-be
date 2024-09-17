@@ -6,41 +6,42 @@ import {
     Delete,
     Req,
     Param,
-    Body, Query
-} from '@nestjs/common';
-import { Request } from 'express';
-import { BaseController } from '../common/base.controller';
-import { IController } from '../common/interfaces/controller.interface';
-import { ClientsToBrokersService } from './clients_to_brokers.service';
-import { clients_to_brokers } from '@prisma/client';
+    Body, Query, ParseIntPipe,
+} from '@nestjs/common'
+import {Request} from 'express'
+import {BaseController} from '../common/base.controller'
+import {IController} from '../common/interfaces/controller.interface'
+import {ClientsToBrokersService} from './clients_to_brokers.service'
+import {clients_to_brokers} from '@prisma/client'
+import {IQueryFilter, QueryFilter} from '../shared/decorators/query-filter.decorator'
+import {QueryPage} from '../shared/decorators/query-page.decorator'
+import {QuerySize} from '../shared/decorators/query-limit.decorator'
+import {PaginatedResult} from '../common/base.service'
 
 @Controller('commission-rates')
-export class ClientsToBrokersController
-    extends BaseController<clients_to_brokers>
-    implements IController<clients_to_brokers>
-{
+export class ClientsToBrokersController extends BaseController<clients_to_brokers> implements IController<clients_to_brokers> {
     constructor(private readonly clientsToBrokersService: ClientsToBrokersService) {
-        super(clientsToBrokersService);
+        super(clientsToBrokersService)
     }
 
     @Get()
-    async findAll(@Req() req: Request): Promise<clients_to_brokers[]> {
-        return super.findAll(req);
+    async findAll(@QueryFilter() filter: IQueryFilter, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<clients_to_brokers>> {
+        return super.findAll(filter, page, size)
     }
 
     @Get('validate-token')
-    async validateToken(@Req() req: Request, @Query() token: { token: string }): Promise<any> {
-        return this.clientsToBrokersService.validateToken(token.token);
+    async validateToken(@Req() req: Request, @Query() token: {token: string}): Promise<any> {
+        return this.clientsToBrokersService.validateToken(token.token)
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: number): Promise<clients_to_brokers> {
-        return super.findOne(id);
+    async findOne(@Param('id', ParseIntPipe) id: number): Promise<clients_to_brokers> {
+        return super.findOne(id)
     }
 
     @Post()
     async create(@Body() data: clients_to_brokers): Promise<clients_to_brokers> {
-        return super.create(data);
+        return super.create(data)
     }
 
     @Put(':id')
@@ -48,13 +49,12 @@ export class ClientsToBrokersController
         @Param('id') id: number,
         @Body() data: clients_to_brokers,
     ): Promise<clients_to_brokers> {
-        return super.update(id, data);
+        return super.update(id, data)
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: number): Promise<void> {
-        return super.delete(id);
+    async delete(@Param('id') id: number): Promise<{success:boolean}> {
+        return super.delete(id)
     }
-
 
 }
