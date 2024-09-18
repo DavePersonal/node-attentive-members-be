@@ -17,6 +17,7 @@ import {IQueryFilter, QueryFilter} from '../shared/decorators/query-filter.decor
 import {QueryPage} from '../shared/decorators/query-page.decorator'
 import {QuerySize} from '../shared/decorators/query-limit.decorator'
 import {PaginatedResult} from '../common/base.service'
+import {IQueryInclude, QueryInclude} from '../shared/decorators/query-include.decorator'
 
 @Controller('commission-rates')
 export class ClientsToBrokersController extends BaseController<clients_to_brokers> implements IController<clients_to_brokers> {
@@ -25,8 +26,13 @@ export class ClientsToBrokersController extends BaseController<clients_to_broker
     }
 
     @Get()
-    async findAll(@QueryFilter() filter: IQueryFilter, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<clients_to_brokers>> {
-        return super.findAll(filter, page, size)
+    async findAll(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<clients_to_brokers>> {
+        return super.findAll(filter, include, page, size)
+    }
+
+    @Get('history')
+    async getHistory(@Query('broker_id', ParseIntPipe) broker_id: number,@Query('client_id', ParseIntPipe) client_id: number ): Promise<any> {
+        return this.clientsToBrokersService.getHistory(broker_id, client_id)
     }
 
     @Get('validate-token')

@@ -15,6 +15,7 @@ import {IQueryFilter, QueryFilter} from '../../shared/decorators/query-filter.de
 import {QueryPage} from '../../shared/decorators/query-page.decorator'
 import {QuerySize} from '../../shared/decorators/query-limit.decorator'
 import {PaginatedResult} from '../../common/base.service'
+import {IQueryInclude, QueryInclude} from '../../shared/decorators/query-include.decorator'
 
 @Controller('invoices-final')
 export class InvoicesFinalController extends BaseController<invoices_final> implements IController<invoices_final> {
@@ -23,8 +24,8 @@ export class InvoicesFinalController extends BaseController<invoices_final> impl
     }
 
     @Get()
-    async findAll(@QueryFilter() filter: IQueryFilter, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<invoices_final>> {
-        return super.findAll(filter, page, size)
+    async findAll(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<invoices_final>> {
+        return super.findAll(filter, include, page, size)
     }
 
     @Get(':id')

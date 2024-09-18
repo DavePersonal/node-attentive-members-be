@@ -22,6 +22,7 @@ import {IQueryFilter, QueryFilter} from '../shared/decorators/query-filter.decor
 import {QueryPage} from '../shared/decorators/query-page.decorator'
 import {QuerySize} from '../shared/decorators/query-limit.decorator'
 import {PaginatedResult} from '../common/base.service'
+import {IQueryInclude, QueryInclude} from '../shared/decorators/query-include.decorator'
 
 @Controller('clients')
 export class ClientsController extends BaseController<clients> implements IController<clients> {
@@ -34,8 +35,8 @@ export class ClientsController extends BaseController<clients> implements IContr
     }
 
     @Get()
-    async findAll(@QueryFilter() filter: IQueryFilter, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<clients>> {
-        return super.findAll(filter, page, size)
+    async findAll(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<clients>> {
+        return super.findAll(filter, include, page, size)
     }
 
     @Get(':id')
@@ -59,8 +60,8 @@ export class ClientsController extends BaseController<clients> implements IContr
                     clientName: createdClient.client_name,
                     // todo: update the URL to the correct one when i know more
                     commissionFormUrl: `${process.env.PROTOCOL}://${process.env.DOMAIN}/broker?token=${this.emailService.createJwtToken({
-                        clientId: createdClient.id,
-                        brokerId: 1,
+                        client_id: createdClient.id,
+                        broker_id: 1,
                         recipientEmail: 'david@oakmorelabs.com',
                     })}`,
                 })

@@ -19,6 +19,7 @@ import {FilesInterceptor} from '@nestjs/platform-express'
 import {JwtAuthGuard} from '../auth/guards/jwt-auth.guard'
 import {SignedUser} from '../shared/decorators/user.decorator'
 import {JwtDto} from '../auth/dto/jwt.dto'
+import {IQueryInclude, QueryInclude} from '../shared/decorators/query-include.decorator'
 
 
 @Controller('members')
@@ -29,8 +30,8 @@ export class MembersController   extends BaseController<members>
     }
 
     @Get()
-    async findAll(@QueryFilter() filter: IQueryFilter, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<members>> {
-        return super.findAll(filter, page, size)
+    async findAll(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<members>> {
+        return super.findAll(filter, include, page, size)
     }
 
     @Get(':id')

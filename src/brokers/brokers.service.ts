@@ -3,7 +3,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import {BaseService, PaginatedResult} from '../common/base.service'
 import { IService } from '../common/interfaces/service.interface';
 import { brokers } from '@prisma/client';
-import {IQueryFilter} from '../shared/decorators/query-filter.decorator' // Import the Prisma model type
+import {IQueryFilter} from '../shared/decorators/query-filter.decorator'
+import {IQueryInclude} from '../shared/decorators/query-include.decorator' // Import the Prisma model type
 
 @Injectable()
 export class BrokersService extends BaseService<brokers> implements IService<brokers> {
@@ -11,8 +12,8 @@ export class BrokersService extends BaseService<brokers> implements IService<bro
         super(prismaService, prismaService.brokers);
     }
 
-    async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<brokers>> {
-        return super.findAll(filter, page, size)
+    async findAll(filter?: IQueryFilter,include?: IQueryInclude, page?: number, size?: number): Promise<PaginatedResult<brokers>> {
+        return super.findAll(filter, include, page, size)
     }
 
     async findOne(id: number): Promise<brokers | null> {

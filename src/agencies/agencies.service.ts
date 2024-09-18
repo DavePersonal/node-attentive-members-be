@@ -11,12 +11,12 @@ export class AgenciesService extends BaseService<agencies> implements IService<a
         super(prismaService, prismaService.agencies);
     }
 
-    async findAgencyByBrokerId(brokerId: number) {
+    async findAgencyByBrokerId(broker_id: number) {
         const agencies = await this.prismaService.agencies.findMany({
             where: {
                 brokers_to_agencies: {
                     some: {
-                        broker_id: brokerId, // Correct nested filtering by using `some` to filter on a related field
+                        broker_id: broker_id, // Correct nested filtering by using `some` to filter on a related field
                     },
                 },
             },
@@ -28,8 +28,8 @@ export class AgenciesService extends BaseService<agencies> implements IService<a
         return agencies;
     }
 
-    async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<agencies>> {
-        return super.findAll(filter, page, size);
+    async findAll(filter?: IQueryFilter, include?: any, page?: number, size?: number): Promise<PaginatedResult<agencies>> {
+        return super.findAll(filter, include, page, size);
     }
 
     async findOne(id: number): Promise<agencies | null> {

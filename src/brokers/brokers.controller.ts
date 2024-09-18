@@ -7,6 +7,7 @@ import {IQueryFilter, QueryFilter} from '../shared/decorators/query-filter.decor
 import {QueryPage} from '../shared/decorators/query-page.decorator'
 import {QuerySize} from '../shared/decorators/query-limit.decorator'
 import {PaginatedResult} from '../common/base.service'
+import {IQueryInclude, QueryInclude} from '../shared/decorators/query-include.decorator'
 
 @Controller('brokers')
 export class BrokersController extends BaseController<brokers> implements IController<brokers> {
@@ -15,8 +16,8 @@ export class BrokersController extends BaseController<brokers> implements IContr
     }
 
     @Get()
-    async findAll(@QueryFilter() filter: IQueryFilter, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<brokers>> {
-        return super.findAll(filter, page, size)
+    async findAll(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<brokers>> {
+        return super.findAll(filter, include, page, size)
     }
 
     @Get(':id')

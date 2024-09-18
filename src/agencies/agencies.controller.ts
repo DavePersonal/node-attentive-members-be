@@ -22,6 +22,7 @@ import {IQueryFilter, QueryFilter} from '../shared/decorators/query-filter.decor
 import {QueryPage} from '../shared/decorators/query-page.decorator'
 import {QuerySize} from '../shared/decorators/query-limit.decorator'
 import {PaginatedResult} from '../common/base.service'
+import {IQueryInclude, QueryInclude} from '../shared/decorators/query-include.decorator'
 
 @Controller('agencies')
 export class AgenciesController extends BaseController<agencies> implements IController<agencies> {
@@ -30,25 +31,25 @@ export class AgenciesController extends BaseController<agencies> implements ICon
     }
 
     @Get('/agency-by-broker-id')
-    async getAgencyByBrokerId(@Req() req: Request, @Query('brokerId', ParseIntPipe) brokerId: number): Promise<agencies[]> {
-        if (!brokerId) {
+    async getAgencyByBrokerId(@Req() req: Request, @Query('broker_id', ParseIntPipe) broker_id: number): Promise<agencies[]> {
+        if (!broker_id) {
             throw new HttpException('Broker ID is required', HttpStatus.BAD_REQUEST);
         }
-        return await this.agenciesService.findAgencyByBrokerId(brokerId)
+        return await this.agenciesService.findAgencyByBrokerId(broker_id)
     }
 
     @Get('/agency-heard-by-broker-id')
-    async getAgencyHeadByBrokerId(@Req() req: Request, @Query('brokerId', ParseIntPipe) brokerId: number): Promise<brokers> {
-        if (!brokerId) {
+    async getAgencyHeadByBrokerId(@Req() req: Request, @Query('broker_id', ParseIntPipe) broker_id: number): Promise<brokers> {
+        if (!broker_id) {
             throw new HttpException('Broker ID is required', HttpStatus.BAD_REQUEST);
         }
-        const brokerToAgencies = await this.brokersToAgenciesService.findHeadBrokerByBrokerId(brokerId);
+        const brokerToAgencies = await this.brokersToAgenciesService.findHeadBrokerByBrokerId(broker_id);
         return brokerToAgencies[0]?.brokers || null
     }
 
     @Get()
-    async findAll(@QueryFilter() filter: IQueryFilter, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<agencies>> {
-        return super.findAll(filter, page, size);
+    async findAll(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<agencies>> {
+        return super.findAll(filter, include, page, size);
     }
 
     @Get(':id')

@@ -15,6 +15,7 @@ import {IQueryFilter, QueryFilter} from '../shared/decorators/query-filter.decor
 import {QueryPage} from '../shared/decorators/query-page.decorator'
 import {QuerySize} from '../shared/decorators/query-limit.decorator'
 import {PaginatedResult} from '../common/base.service'
+import {IQueryInclude, QueryInclude} from '../shared/decorators/query-include.decorator'
 
 @Controller('clients-to-brokers-external')
 export class ClientsToBrokersExternalController extends BaseController<clients_to_brokers_external> implements IController<clients_to_brokers_external> {
@@ -23,8 +24,8 @@ export class ClientsToBrokersExternalController extends BaseController<clients_t
     }
 
     @Get()
-    async findAll(@QueryFilter() filter: IQueryFilter, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<clients_to_brokers_external>> {
-        return super.findAll(filter, page, size)
+    async findAll(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<clients_to_brokers_external>> {
+        return super.findAll(filter, include, page, size)
     }
 
     @Get(':id')

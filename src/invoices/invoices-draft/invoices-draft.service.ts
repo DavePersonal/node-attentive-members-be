@@ -5,7 +5,8 @@ import { PrismaService } from '../../prisma/prisma.service';
 import {BaseService, PaginatedResult} from '../../common/base.service'
 import { IService } from '../../common/interfaces/service.interface';
 import { invoices_draft } from '@prisma/client';
-import {IQueryFilter} from '../../shared/decorators/query-filter.decorator' // Import the Prisma model type
+import {IQueryFilter} from '../../shared/decorators/query-filter.decorator'
+import {IQueryInclude} from '../../shared/decorators/query-include.decorator' // Import the Prisma model type
 
 @Injectable()
 export class InvoicesDraftService
@@ -17,8 +18,8 @@ export class InvoicesDraftService
     }
 
     // Retrieve all draft invoices
-    async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<invoices_draft>> {
-        return super.findAll(filter, page, size)
+    async findAll(filter?: IQueryFilter,include?: IQueryInclude, page?: number, size?: number): Promise<PaginatedResult<invoices_draft>> {
+        return super.findAll(filter, include, page, size)
     }
 
     // Retrieve a single draft invoice by ID

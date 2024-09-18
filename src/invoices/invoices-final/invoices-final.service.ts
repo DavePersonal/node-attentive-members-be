@@ -3,7 +3,8 @@ import { PrismaService } from '../../prisma/prisma.service'; // Correct import p
 import {BaseService, PaginatedResult} from '../../common/base.service'
 import { IService } from '../../common/interfaces/service.interface';
 import { invoices_final } from '@prisma/client';
-import {IQueryFilter} from '../../shared/decorators/query-filter.decorator' // Import the Prisma model type
+import {IQueryFilter} from '../../shared/decorators/query-filter.decorator'
+import {IQueryInclude} from '../../shared/decorators/query-include.decorator' // Import the Prisma model type
 
 @Injectable()
 export class InvoicesFinalService
@@ -14,8 +15,8 @@ export class InvoicesFinalService
         super(prismaService, prismaService.invoices_final);
     }
 
-    async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<invoices_final>> {
-        return super.findAll(filter, page, size)
+    async findAll(filter?: IQueryFilter, include?: IQueryInclude, page?: number, size?: number): Promise<PaginatedResult<invoices_final>> {
+        return super.findAll(filter, include, page, size)
     }
 
     async findOne(id: number): Promise<invoices_final | null> {

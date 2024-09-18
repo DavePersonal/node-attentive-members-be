@@ -4,6 +4,7 @@ import {brokers, brokers_to_agencies} from '@prisma/client';
 import {IService} from '../common/interfaces/service.interface';
 import {PrismaService} from '../prisma/prisma.service';
 import {IQueryFilter} from '../shared/decorators/query-filter.decorator'
+import {IQueryInclude} from '../shared/decorators/query-include.decorator'
 
 @Injectable()
 export class BrokersToAgenciesService extends BaseService<brokers_to_agencies> implements IService<brokers_to_agencies> {
@@ -11,10 +12,10 @@ export class BrokersToAgenciesService extends BaseService<brokers_to_agencies> i
         super(prismaService, prismaService.brokers_to_agencies);
     }
 
-    async findHeadBrokerByBrokerId(brokerId: number): Promise<(brokers_to_agencies & { brokers: brokers })[] | HttpException> {
+    async findHeadBrokerByBrokerId(broker_id: number): Promise<(brokers_to_agencies & { brokers: brokers })[] | HttpException> {
         const brokerToAgencyRelationShips = await this.prismaService.brokers_to_agencies.findFirst({
             where: {
-                broker_id: brokerId
+                broker_id: broker_id
             },
         });
 
@@ -41,8 +42,8 @@ export class BrokersToAgenciesService extends BaseService<brokers_to_agencies> i
         return headBroker;
     }
 
-    async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<brokers_to_agencies>> {
-        return super.findAll(filter, page, size);
+    async findAll(filter?: IQueryFilter,include?: IQueryInclude, page?: number, size?: number): Promise<PaginatedResult<brokers_to_agencies>> {
+        return super.findAll(filter, include, page, size);
     }
 
     async findOne(id: number): Promise<brokers_to_agencies | null> {

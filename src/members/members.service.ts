@@ -9,7 +9,8 @@ import {MemberStatus} from './member.types'
 import {GoogleService} from '../common/google/google.service'
 import {EmailService} from '../common/email/email.service'
 import {EmailActions} from '../common/email/email-actions.enum'
-import {FileUtils} from '../file/file.utils' // Import the Prisma model type
+import {FileUtils} from '../file/file.utils'
+import {IQueryInclude} from '../shared/decorators/query-include.decorator' // Import the Prisma model type
 
 @Injectable()
 export class MembersService extends BaseService<members> implements IService<members> {
@@ -22,8 +23,8 @@ export class MembersService extends BaseService<members> implements IService<mem
         super(prismaService, prismaService.members);
     }
 
-    async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<members>> {
-        return super.findAll(filter, page, size);
+    async findAll(filter?: IQueryFilter, include?: IQueryInclude,  page?: number, size?: number): Promise<PaginatedResult<members>> {
+        return super.findAll(filter, include, page, size);
     }
 
     async findOne(id: number): Promise<members | null> {
@@ -42,7 +43,7 @@ export class MembersService extends BaseService<members> implements IService<mem
         return super.delete(id);
     }
 
-    async uploadFilesAndImportMembers(files: any[], account: IAccount, client_name?: string, clientId?: number): Promise<members[]> {
+    async uploadFilesAndImportMembers(files: any[], account: IAccount, client_name?: string, client_id?: number): Promise<members[]> {
         const fileUtils = new FileUtils()
         let membersToCreate: any[] = await fileUtils.getMembersDataFromFile(files[0])
 
@@ -50,7 +51,7 @@ export class MembersService extends BaseService<members> implements IService<mem
         await this.emailService.sendEmail(EmailActions.UploadFile, {
             firstName: account?.firstname,
             newFileName: files[0].originalname,
-            clientID: clientId || null,
+            clientID: client_id || null,
             clientName: client_name || '',
         })
 
@@ -63,7 +64,7 @@ export class MembersService extends BaseService<members> implements IService<mem
         membersToCreate = membersToCreate.map(member => ({
             ...member,
             client_name: client_name || null,
-            client_id: Number(clientId) || null,
+            client_id: Number(client_id) || null,
             member_status: MemberStatus.ACTIVE,
             phone_num: String(member.phone_num),
             other_phone: String(member.other_phone),
