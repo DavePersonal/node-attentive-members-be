@@ -18,6 +18,8 @@ import {QueryPage} from '../shared/decorators/query-page.decorator'
 import {QuerySize} from '../shared/decorators/query-limit.decorator'
 import {PaginatedResult} from '../common/base.service'
 import {IQueryInclude, QueryInclude} from '../shared/decorators/query-include.decorator'
+import {EditCommissionDecorator} from './utils/edit-commission.decorator'
+import {IEditCommissionDto} from './clients_to_brokers.types'
 
 @Controller('commission-rates')
 export class ClientsToBrokersController extends BaseController<clients_to_brokers> implements IController<clients_to_brokers> {
@@ -37,6 +39,13 @@ export class ClientsToBrokersController extends BaseController<clients_to_broker
 
     @Get('validate-token')
     async validateToken(@Req() req: Request, @Query() token: {token: string}): Promise<any> {
+       // TODO: validate token
+        return null
+    }
+
+    @Get('resend-commission-email')
+    async resendCommissionEmail(@Req() req: Request, @Query('token') token: {token: string}): Promise<any> {
+        console.log('reosenent', token)
         return this.clientsToBrokersService.validateToken(token.token)
     }
 
@@ -48,6 +57,11 @@ export class ClientsToBrokersController extends BaseController<clients_to_broker
     @Post()
     async create(@Body() data: clients_to_brokers): Promise<clients_to_brokers> {
         return super.create(data)
+    }
+    @Post('edit-commission')
+    async editCommission(@EditCommissionDecorator() parsedBody: IEditCommissionDto): Promise<clients_to_brokers> {
+        await this.clientsToBrokersService.editCommission(parsedBody)
+        return null
     }
 
     @Put(':id')
