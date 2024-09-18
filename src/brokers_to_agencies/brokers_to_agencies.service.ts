@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common'
 import {BaseService, PaginatedResult} from '../common/base.service'
 import {brokers, brokers_to_agencies} from '@prisma/client';
 import {IService} from '../common/interfaces/service.interface';
 import {PrismaService} from '../prisma/prisma.service';
-import {HttpException} from '../common/exceptions/HttpException';
 import {IQueryFilter} from '../shared/decorators/query-filter.decorator'
 
 @Injectable()
@@ -20,7 +19,7 @@ export class BrokersToAgenciesService extends BaseService<brokers_to_agencies> i
         });
 
         if (!brokerToAgencyRelationShips) {
-            return new HttpException(400, 'Broker does not have an agency'); // Throw an error if no agency is found for the broker
+            return new HttpException('Broker does not have an agency', HttpStatus.BAD_REQUEST); // Throw an error if no agency is found for the broker
         }
 
         const agencyId = brokerToAgencyRelationShips.agency_id;
@@ -36,7 +35,7 @@ export class BrokersToAgenciesService extends BaseService<brokers_to_agencies> i
         });
 
         if (!headBroker) {
-            return new HttpException(400, 'Agency does not have a head broker'); // Throw an error if no head broker is found for the agency
+            return new HttpException('Agency does not have a head broker', HttpStatus.BAD_REQUEST); // Throw an error if no head broker is found for the agency
         }
 
         return headBroker;

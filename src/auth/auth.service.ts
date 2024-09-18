@@ -1,8 +1,7 @@
-import {HttpStatus, Injectable} from '@nestjs/common'
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common'
 import {LoginDto} from './dto/login.dto'
 import {DatabaseDataAccess} from './database/database.dataAccess'
 import {DatabaseCollection} from './database/database.collection'
-import {HttpException} from '../common/exceptions/HttpException'
 import {compare} from 'bcrypt'
 import {MembersRolePermissionsDefault} from './database/members-roles.types'
 import {JwtService} from '@nestjs/jwt'
@@ -17,23 +16,23 @@ export class AuthService {
     const user = await databaseDataAccess.filterOne(DatabaseCollection.Users, {email: loginDto.email})
 
     if (!user) {
-      throw new HttpException(HttpStatus.UNAUTHORIZED, `Invalid credentials`)
+      throw new HttpException(`Invalid credentials`, HttpStatus.UNAUTHORIZED)
     }
 
     const isPasswordValid = await compare(loginDto.password, user.password)
 
     if (!isPasswordValid) {
-      throw new HttpException(HttpStatus.UNAUTHORIZED, `Invalid credentials`)
+      throw new HttpException(`Invalid credentials`, HttpStatus.UNAUTHORIZED)
     }
 
     const account = await databaseDataAccess.filterOne(DatabaseCollection.Accounts, {_id: user.lastUsedAccount})
 
     if (!account) {
-      throw new HttpException(HttpStatus.UNAUTHORIZED, `Account not found`)
+      throw new HttpException(`Account not found`, HttpStatus.UNAUTHORIZED)
     }
 
     if (!account?.isActive) {
-      throw new HttpException(HttpStatus.UNAUTHORIZED, `Account is not active`)
+      throw new HttpException(`Account is not active`, HttpStatus.UNAUTHORIZED)
     }
 
     const membersRoles = await databaseDataAccess.findAll(DatabaseCollection.MemberRoles, {_id: {$in: account.membersRoles || []}}) || []

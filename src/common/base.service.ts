@@ -22,11 +22,9 @@ export class BaseService<T> implements IService<T> {
     }
 
     async findAll(filter?: IQueryFilter, page?: number, size?: number): Promise<PaginatedResult<T>> {
-        let skip, take
-        if (page && size) {
-            skip = (page - 1) * size
-            take = size
-        }
+        const skip = page * size;
+        const take = size
+
         const records = await this.modelDelegate.findMany({where: filter, skip, take})
         const count = await this.modelDelegate.count({where: filter})
 

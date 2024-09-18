@@ -1,11 +1,23 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req} from '@nestjs/common'
-import {BaseController} from '../common/base.controller';
-import {agencies, brokers} from '@prisma/client';
-import {IController} from '../common/interfaces/controller.interface';
-import {AgenciesService} from './agencies.service';
-import {Request} from 'express';
-import {BrokersToAgenciesService} from '../brokers_to_agencies/brokers_to_agencies.service';
-import {HttpException} from '../common/exceptions/HttpException';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpException,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Post,
+    Put,
+    Query,
+    Req,
+} from '@nestjs/common'
+import {BaseController} from '../common/base.controller'
+import {agencies, brokers} from '@prisma/client'
+import {IController} from '../common/interfaces/controller.interface'
+import {AgenciesService} from './agencies.service'
+import {Request} from 'express'
+import {BrokersToAgenciesService} from '../brokers_to_agencies/brokers_to_agencies.service'
 import {IQueryFilter, QueryFilter} from '../shared/decorators/query-filter.decorator'
 import {QueryPage} from '../shared/decorators/query-page.decorator'
 import {QuerySize} from '../shared/decorators/query-limit.decorator'
@@ -17,22 +29,21 @@ export class AgenciesController extends BaseController<agencies> implements ICon
         super(agenciesService);
     }
 
-    @Get('/getAgencyByBrokerId')
-    async getAgencyByBrokerId(@Req() req: Request, @Query() brokerId: number): Promise<agencies[]> {
+    @Get('/agency-by-broker-id')
+    async getAgencyByBrokerId(@Req() req: Request, @Query('brokerId', ParseIntPipe) brokerId: number): Promise<agencies[]> {
         if (!brokerId) {
-            throw new HttpException(400, 'Broker ID is required');
+            throw new HttpException('Broker ID is required', HttpStatus.BAD_REQUEST);
         }
-        const brokerToAgencies = await this.agenciesService.findAgencyByBrokerId(brokerId);
-        return brokerToAgencies
+        return await this.agenciesService.findAgencyByBrokerId(brokerId)
     }
 
-    @Get('/agencyHeadByBrokerId')
-    async getAgencyHeadByBrokerId(@Req() req: Request, @Query() brokerId: number): Promise<brokers> {
+    @Get('/agency-heard-by-broker-id')
+    async getAgencyHeadByBrokerId(@Req() req: Request, @Query('brokerId', ParseIntPipe) brokerId: number): Promise<brokers> {
         if (!brokerId) {
-            throw new HttpException(400, 'Broker ID is required');
+            throw new HttpException('Broker ID is required', HttpStatus.BAD_REQUEST);
         }
         const brokerToAgencies = await this.brokersToAgenciesService.findHeadBrokerByBrokerId(brokerId);
-        return brokerToAgencies[0].brokers
+        return brokerToAgencies[0]?.brokers || null
     }
 
     @Get()

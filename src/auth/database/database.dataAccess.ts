@@ -1,6 +1,6 @@
 import {Db, MongoClient} from 'mongodb'
 import {DatabaseCollection} from './database.collection'
-import {HttpException} from '../../common/exceptions/HttpException';
+import {HttpException, HttpStatus} from '@nestjs/common'
 
 export class DatabaseDataAccess {
     private static instance: DatabaseDataAccess;
@@ -27,7 +27,7 @@ export class DatabaseDataAccess {
             this.db = this.client.db(this.dbName);
             console.log('MongoDB connected');
         } catch (e) {
-            throw new HttpException(400, 'Database connection error' + JSON.stringify(e));
+            throw new HttpException('Database connection error' + JSON.stringify(e), HttpStatus.BAD_REQUEST);
         }
     }
 
