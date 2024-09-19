@@ -12,7 +12,7 @@ export class BaseService<T> implements IService<T> {
     constructor(
         protected readonly prismaService: PrismaService,
         private readonly modelDelegate: {
-            findMany: (args?: {where?: {[key: string]: any}, skip?: number; take?: number, include?: any}) => Promise<T[]>;
+            findMany: (args?: {where?: IQueryFilter, skip?: number; take?: number, include?: IQueryInclude}) => Promise<T[]>;
             findUnique: (args: {where: {id: number}}) => Promise<T|null>;
             create: (args: {data: T}) => Promise<T>;
             update: (args: {where: {id: number}; data: T}) => Promise<T>;
