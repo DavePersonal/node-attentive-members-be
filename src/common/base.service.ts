@@ -12,7 +12,13 @@ export class BaseService<T> implements IService<T> {
     constructor(
         protected readonly prismaService: PrismaService,
         private readonly modelDelegate: {
-            findMany: (args?: {where?: IQueryFilter, skip?: number; take?: number, include?: IQueryInclude}) => Promise<T[]>;
+            findMany: (args?: {
+                where?: IQueryFilter,
+                skip?: number;
+                take?: number,
+                include?: IQueryInclude
+            }) => Promise<T[]>;
+            findFirst: (args?: {where?: IQueryFilter,include?: IQueryInclude}) => Promise<T>,
             findUnique: (args: {where: {id: number}}) => Promise<T|null>;
             create: (args: {data: T}) => Promise<T>;
             update: (args: {where: {id: number}; data: T}) => Promise<T>;
@@ -23,8 +29,14 @@ export class BaseService<T> implements IService<T> {
     }
 
     async findAll(filter?: IQueryFilter, include?: IQueryInclude, page?: number, size?: number): Promise<PaginatedResult<T>> {
-        const skip = page * size;
-        const take = size
+        let skip: number|undefined
+        let take: number|undefined
+
+        if (page !== undefined && size !== undefined) {
+            skip = page * size
+            take = size
+        }
+
         include = include || {}
 
         const records = await this.modelDelegate.findMany({where: filter, skip, take, include})
@@ -56,5 +68,11 @@ export class BaseService<T> implements IService<T> {
         return this.modelDelegate.delete({
             where: {id},
         })
+    }
+
+    findFirst(filter: IQueryFilter, include?: IQueryInclude): Promise<T> {
+        include = include || {}
+        filter = filter || {}
+        return this.modelDelegate.findFirst({where: filter, include})
     }
 }

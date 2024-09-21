@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Req} from '@nestjs/common'
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put} from '@nestjs/common'
 import {BaseController} from '../common/base.controller'
 import {brokers_to_agencies} from '@prisma/client'
 import {IController} from '../common/interfaces/controller.interface'

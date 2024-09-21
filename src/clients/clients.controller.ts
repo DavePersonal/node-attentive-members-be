@@ -10,7 +10,7 @@ import {
     Post,
     Put,
     Query,
-    Req,
+    UseGuards,
 } from '@nestjs/common'
 import {ClientsService} from './clients.service'
 import {BaseController} from '../common/base.controller'
@@ -23,6 +23,11 @@ import {QueryPage} from '../shared/decorators/query-page.decorator'
 import {QuerySize} from '../shared/decorators/query-limit.decorator'
 import {PaginatedResult} from '../common/base.service'
 import {IQueryInclude, QueryInclude} from '../shared/decorators/query-include.decorator'
+import {JwtAuthGuard} from '../auth/guards/jwt-auth.guard'
+import {BrokerId} from '../shared/decorators/broker.decorator'
+import {BrokersToAgenciesService} from '../brokers_to_agencies/brokers_to_agencies.service'
+import {ClientsToBrokersService} from '../clients_to_brokers/clients_to_brokers.service'
+import {RequestInfoDto} from './dto/request-info.dto'
 
 @Controller('clients')
 export class ClientsController extends BaseController<clients> implements IController<clients> {
@@ -30,18 +35,43 @@ export class ClientsController extends BaseController<clients> implements IContr
     constructor(
         private readonly clientsService: ClientsService,
         private readonly emailService: EmailService, // Inject the EmailService
+        private readonly brokerToAgencyService: BrokersToAgenciesService,
+        private readonly clientsToBrokersService: ClientsToBrokersService,
     ) {
         super(clientsService)
     }
 
     @Get()
-    async findAll(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<clients>> {
+    @UseGuards(JwtAuthGuard)
+    async findAllForLoggedBroker(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number, @BrokerId() broker_id: number): Promise<PaginatedResult<clients>> {
+        // TODO: fix this, dont know which table to which
+        if (broker_id) {
+            filter = {
+                ...filter,
+                // brokers: {
+                //     some: {
+                //         id: broker_id,
+                //     },
+                // },
+            }
+        }
         return super.findAll(filter, include, page, size)
     }
 
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number): Promise<clients> {
         return super.findOne(id)
+    }
+
+
+    @Post(':id/request-info')
+    async requestInfo(@Param('id', ParseIntPipe) id: number, @Body() body: RequestInfoDto): Promise<{emailSent: boolean}> {
+        const broker = await this.clientsToBrokersService.findFirst({client_id: id})
+        const headBroker = await this.brokerToAgencyService.findHeadBrokerByBrokerId(broker.id)
+
+        // await this.sendgridEmailService.sendClientEmail(req.body, client.client_name, clientId, client.brokerId);
+
+        return {emailSent: true}
     }
 
     @Post()

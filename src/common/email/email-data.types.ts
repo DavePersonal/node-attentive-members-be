@@ -18,4 +18,8 @@ export type EmailData = {
         clientID: number;
         newFileName: string;
     }
+    [EmailActions.Support]: {
+        email_subject: string;
+        email_data: string;
+    }
 };

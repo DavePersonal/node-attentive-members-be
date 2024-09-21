@@ -30,6 +30,11 @@ export class AgenciesController extends BaseController<agencies> implements ICon
         super(agenciesService);
     }
 
+    @Get()
+    async findAll(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<agencies>> {
+        return super.findAll(filter, include, page, size);
+    }
+
     @Get('/agency-by-broker-id')
     async getAgencyByBrokerId(@Req() req: Request, @Query('broker_id', ParseIntPipe) broker_id: number): Promise<agencies[]> {
         if (!broker_id) {
@@ -47,10 +52,6 @@ export class AgenciesController extends BaseController<agencies> implements ICon
         return brokerToAgencies[0]?.brokers || null
     }
 
-    @Get()
-    async findAll(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number): Promise<PaginatedResult<agencies>> {
-        return super.findAll(filter, include, page, size);
-    }
 
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number): Promise<agencies> {
