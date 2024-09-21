@@ -30,7 +30,7 @@ export class BrokersToAgenciesService extends BaseService<brokers_to_agencies> i
         const headBroker = await super.findFirst({agency_id: agency_id, is_head_broker: true}, {brokers: true})
 
         if (!headBroker) {
-            // TODO: send email to support
+            // TODO: Dejv send email to support
             // const emailData = {
             //     email_subject: 'Attentive Member Manager - Agency without Head broker',
             //     email_data: `No agency head found for agency of Broker with Id ${broker_id}.`,

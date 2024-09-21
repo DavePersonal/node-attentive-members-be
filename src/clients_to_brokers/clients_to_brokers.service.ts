@@ -51,9 +51,9 @@ export class ClientsToBrokersService
     }
 
     async getHistory(broker_id: number, client_id: number) {
-        // TODO: fix brokers doesnt exists on client
+        // TODO: Dejv fix brokers doesnt exists on client
         // Find the client and load the related brokers and clients_to_brokers
-        const {records: clients} = await this.clientService.findAll({id: client_id}, {clients_to_brokers: true}, 0, 1)
+        const {records: clients} = await this.clientService.findAll({id: client_id}, {clients_to_brokers: true})
         // const clients = await clientRepository.find({
         //     where: {id: clientId},
         //     relations: ['brokers', 'clients_to_brokers'],
@@ -104,7 +104,7 @@ export class ClientsToBrokersService
         //     });
         // });
 
-        return data
+        return data.filter(Boolean).flat()
     }
 
     editCommission(parsedBody: IEditCommissionDto) {

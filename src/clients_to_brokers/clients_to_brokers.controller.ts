@@ -39,13 +39,11 @@ export class ClientsToBrokersController extends BaseController<clients_to_broker
 
     @Get('validate-token')
     async validateToken(@Req() req: Request, @Query() token: {token: string}): Promise<any> {
-       // TODO: validate token
-        return null
+        return this.clientsToBrokersService.validateToken(token.token)
     }
 
     @Get('resend-commission-email')
     async resendCommissionEmail(@Req() req: Request, @Query('token') token: {token: string}): Promise<any> {
-        console.log('reosenent', token)
         return this.clientsToBrokersService.validateToken(token.token)
     }
 

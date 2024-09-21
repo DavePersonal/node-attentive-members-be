@@ -43,8 +43,8 @@ export class ClientsController extends BaseController<clients> implements IContr
 
     @Get()
     @UseGuards(JwtAuthGuard)
-    async findAllForLoggedBroker(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number, @BrokerId() broker_id: number): Promise<PaginatedResult<clients>> {
-        // TODO: fix this, dont know which table to which
+    async findAllClientsForLoggedBroker(@QueryFilter() filter: IQueryFilter, @QueryInclude() include: IQueryInclude, @QueryPage() page: number, @QuerySize() size: number, @BrokerId() broker_id: number): Promise<PaginatedResult<clients>> {
+        // TODO: Dejv fix this, dont know which table to which
         if (broker_id) {
             filter = {
                 ...filter,
